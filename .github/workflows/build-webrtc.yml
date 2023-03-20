@@ -31,7 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup Debug Session
-        uses: csexton/debugger-action@master
+        uses: P3TERX/ssh2actions@main
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           
       - name: Install dependencies
         run: |
