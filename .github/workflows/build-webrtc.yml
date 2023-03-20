@@ -36,7 +36,6 @@ jobs:
       - name: Build WebRTC
         run: |
           export PATH=${{ env.DEPOT_TOOLS_PATH }}:${PATH}
-
           fetch --nohooks webrtc
           cd src
           git checkout branch-heads/4664
