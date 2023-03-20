@@ -31,7 +31,12 @@ jobs:
 
       - name: Update GlibC
         run: | 
+          make -v
+          gcc -v
           ldd --version
+          yum install centos-release-scl
+          yum install devtoolset-7-gcc*
+          scl enable devtoolset-7 bash
           wget http://ftp.gnu.org/gnu/glibc/glibc-2.18.tar.gz
           tar -xzvf glibc-2.18.tar.gz
           cd glibc-2.18
@@ -40,6 +45,7 @@ jobs:
           ../configure --prefix=/usr
           make -j4
           make install
+          exit
           ldd --version
         
       - name: Install Depot Tools
