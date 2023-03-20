@@ -1,0 +1,64 @@
+name: Build WebRTC
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - branch-heads/4664
+
+env:
+  PLATFORM: linux64
+  WEBRTC_BRANCH: branch-heads/4664
+  DEPOT_TOOLS_PATH: /usr/local/depot_tools
+  BUILD_PATH: /tmp/webrtc-build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout WebRTC source code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ env.WEBRTC_BRANCH }}
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y \
+            curl \
+            git-core \
+            libnss3 \
+            libx11-dev \
+            ninja-build \
+            openjdk-8-jdk \
+            python \
+            python-is-python3 \
+            python3 \
+            python3-is-python3 \
+            python3-pip \
+            unzip \
+            wget
+
+      - name: Install Depot Tools
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ${{ env.DEPOT_TOOLS_PATH }}
+
+      - name: Build WebRTC
+        run: |
+          export PATH=${{ env.DEPOT_TOOLS_PATH }}:${PATH}
+
+          cd src
+          gn gen out/Release --args='target_os="linux" target_cpu="x64" is_debug=false is_component_build=false is_clang=false use_lld=false treat_warnings_as_errors=false use_custom_libcxx=false use_rtti=true rtc_include_tests=true rtc_build_examples=true'
+          ninja -C out/Static
+
+      - name: Compress and upload static library
+        uses: actions/upload-artifact@v2
+        with:
+          name: webrtc_static_library
+          path: src/out/Static/libwebrtc.a
+
+      - name: Provide download link for static library
+        run: |
+          echo "Download the static library from this link: https://github.com/${{ github.repository }}/actions/artifacts/${{ github.run_id }}" 
