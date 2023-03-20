@@ -32,12 +32,12 @@ jobs:
       - name: Install Depot Tools
         run: |
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ${{ env.DEPOT_TOOLS_PATH }}
-          fetch --nohooks webrtc
           
       - name: Build WebRTC
         run: |
           export PATH=${{ env.DEPOT_TOOLS_PATH }}:${PATH}
 
+          fetch --nohooks webrtc
           cd src
           git checkout branch-heads/4664
           gn gen out/Release --args='target_os="linux" target_cpu="x64" is_debug=false is_component_build=false is_clang=false use_lld=false treat_warnings_as_errors=false use_custom_libcxx=false use_rtti=true rtc_include_tests=true rtc_build_examples=true'
