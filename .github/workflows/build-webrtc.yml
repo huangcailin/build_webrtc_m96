@@ -71,7 +71,7 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         
-          #build/linux/sysroot_scripts/install-sysroot.py --arch=x64 --symlink
+          #build/linux/sysroot_scripts/install-sysroot.py --arch=x64
           #gn gen out/Release --args='target_os="linux" target_cpu="x64" is_debug=false is_component_build=false is_clang=false use_lld=false treat_warnings_as_errors=false use_custom_libcxx=false use_rtti=true rtc_include_tests=true rtc_build_examples=true'
           #ninja -C out/Static
 
