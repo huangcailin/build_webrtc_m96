@@ -27,14 +27,15 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    #container: docker.io/centos:7
+    container: docker.io/centos:7
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Debug Session
-        uses: P3TERX/ssh2actions@main
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      #- name: Setup Debug Session
+      #  uses: P3TERX/ssh2actions@main
+      #if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      #  env:
+      #    TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+       #   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           
       - name: Install dependencies
         run: |
@@ -50,18 +51,10 @@ jobs:
           python-setuptools python-gobject python-gobject-devel python-libxml2 python-libxslt gstreamer1-devel \
           gstreamer1-plugins-base-devel gstreamer1-plugins-bad-free-devel gstreamer1-plugins-good-free-devel \
           gstreamer1-plugins-ugly-free-devel python3 python3-pip 
-    
-      - name: SSH connection to Actions
-        uses: P3TERX/ssh2actions@main
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
 
       - name: Update GlibC
         run: | 
+          cd /tmp
           make -v
           gcc -v
           ldd --version
@@ -74,6 +67,15 @@ jobs:
           make -j4
           make install
           ldd --version
+        
+      - name: updateGit
+        run: |
+          cd /tmp
+          wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.24.1.tar.gz
+          tar -xzvf git-2.24.1.tar.gz
+          cd git-2.24.1
+          ./configure prefix=/usr
+          make && make install
         
       - name: Install Depot Tools
         run: |
