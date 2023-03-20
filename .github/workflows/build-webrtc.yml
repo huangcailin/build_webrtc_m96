@@ -1,12 +1,13 @@
 name: Build WebRTC
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
+  #pull_request:
+  #  branches:
+  #    - main
+  repository_dispatch:
   workflow_dispatch:
     inputs:
       ssh:
