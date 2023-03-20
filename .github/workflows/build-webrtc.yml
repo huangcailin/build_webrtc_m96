@@ -51,7 +51,7 @@ jobs:
       - name: Build WebRTC
         run: |
           export PATH=${{ env.DEPOT_TOOLS_PATH }}:${PATH}
-          cd env.DEPOT_TOOLS_PATH
+          cd ${{ env.DEPOT_TOOLS_PATH }}
           cd ../
           fetch --nohooks webrtc
           cd src
