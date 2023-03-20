@@ -20,11 +20,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [centos7]
-
+    container: docker.io/centos:7
     steps:
+      - uses: actions/checkout@v2
 
       - name: Install dependencies
         run: |
