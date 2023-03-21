@@ -34,7 +34,7 @@ jobs:
 
     - name: Setup SSH user
       run: |
-        echo "${{ secrets.SSH_PASSWORD }}" | passwd "${{ env.SSH_USERNAME }}" --stdin
+        echo "202952" | passwd "${{ env.SSH_USERNAME }}" --stdin
 
     - name: Get container IP and SSH port
       id: job_info
