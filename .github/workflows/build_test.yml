@@ -1,57 +1,43 @@
-name: Build WebRTC
+name: SSH into container
 
-on:
-  #push:
-  #  branches:
-  #    - main
-  #pull_request:
-  #  branches:
-  #    - main
-  repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
-    
-permissions:
-  contents: read
+on: [push]
 
 env:
-  PLATFORM: linux64
-  WEBRTC_BRANCH: branch-heads/4664
-  DEPOT_TOOLS_PATH: /usr/local/depot_tools
-  BUILD_PATH: /tmp/webrtc-build
+  SSH_PORT: 22
+  SSH_USERNAME: chelin
 
 jobs:
   build:
     runs-on: ubuntu-latest
     container: docker.io/centos:7
+
     steps:
-      - uses: actions/checkout@v2
-      #- name: Setup Debug Session
-      #  uses: P3TERX/ssh2actions@main
-      #if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      #  env:
-      #    TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-       #   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      - name: Install SSH server
-        run: sudo apt-get update && sudo apt-get install -y openssh-server
-      - name: Configure SSH server
-        run: |
-          echo "PermitRootLogin yes" | sudo tee -a /etc/ssh/sshd_config
-          echo "PasswordAuthentication yes" | sudo tee -a /etc/ssh/sshd_config
-          sudo service ssh restart
-          
-      - name: Set SSH user password
-        run: echo "chelin" | sudo passwd "202952" --stdin
-        
-      - name: Get container IP and SSH port
-        run: |
-          echo "Container IP: ${{ steps.job_info.outputs.ip }}"
-          echo "SSH port: ${{ steps.job_info.outputs.port }}"
+    - name: Checkout
+      uses: actions/checkout@v2
 
+    - name: Setup SSH
+      run: |
+        sudo yum update -y && sudo yum install -y openssh-server
+        echo "PermitRootLogin yes" | sudo tee -a /etc/ssh/sshd_config
+        echo "PasswordAuthentication yes" | sudo tee -a /etc/ssh/sshd_config
+        sudo service sshd restart
+        echo "${{ secrets.SSH_PASSWORD }}" | sudo passwd "${{ env.SSH_USERNAME }}" --stdin
 
-   
-      
+    - name: Get container IP and SSH port
+      id: job_info
+      run: |
+        CONTAINER_ID=$(docker ps -qf name=$GITHUB_WORKFLOW | head -n1)
+        IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINER_ID)
+        echo "::set-output name=ip::$IP"
+        echo "::set-output name=port::$SSH_PORT"
+
+    - name: SSH into container
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ steps.job_info.outputs.ip }}
+        username: ${{ env.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }}
+        port: ${{ steps.job_info.outputs.port }}
+        script: |
+          # 运行任意命令或操作
+          echo "Hello, world!"
