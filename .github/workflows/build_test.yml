@@ -22,35 +22,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Install SSH
-      run: |
-        yum update -y && yum install -y openssh-server
-
-    - name: Configure SSH
-      run: |
-        sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
-        sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
-        systemctl enable sshd.service
-
-    - name: Setup SSH user
-      run: |
-        echo "202952" | passwd "${{ env.SSH_USERNAME }}" --stdin
-
-    - name: Get container IP and SSH port
-      id: job_info
-      run: |
-        CONTAINER_ID=$(docker ps -qf name=$GITHUB_WORKFLOW | head -n1)
-        IP=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $CONTAINER_ID)
-        echo "::set-output name=ip::$IP"
-        echo "::set-output name=port::$SSH_PORT"
-
-    - name: SSH into container
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ steps.job_info.outputs.ip }}
-        username: ${{ env.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD }}
-        port: ${{ steps.job_info.outputs.port }}
-        script: |
-          # 运行任意命令或操作
-          echo "Hello, world!"
+    - name: Setup Debug Session
+      uses: P3TERX/ssh2actions@main
+      env:
+         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
