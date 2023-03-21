@@ -1,6 +1,13 @@
 name: SSH into container
 
-on: [push]
+on: 
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
 
 env:
   SSH_PORT: 22
@@ -17,11 +24,11 @@ jobs:
 
     - name: Setup SSH
       run: |
-        sudo yum update -y && sudo yum install -y openssh-server
-        echo "PermitRootLogin yes" | sudo tee -a /etc/ssh/sshd_config
-        echo "PasswordAuthentication yes" | sudo tee -a /etc/ssh/sshd_config
-        sudo service sshd restart
-        echo "${{ secrets.SSH_PASSWORD }}" | sudo passwd "${{ env.SSH_USERNAME }}" --stdin
+        yum update -y && yum install -y openssh-server
+        echo "PermitRootLogin yes" | tee -a /etc/ssh/sshd_config
+        echo "PasswordAuthentication yes" | tee -a /etc/ssh/sshd_config
+        service sshd restart
+        echo "${{ secrets.SSH_PASSWORD }}" | passwd "${{ env.SSH_USERNAME }}" --stdin
 
     - name: Get container IP and SSH port
       id: job_info
