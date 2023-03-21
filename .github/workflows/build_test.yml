@@ -1,0 +1,57 @@
+name: Build WebRTC
+
+on:
+  #push:
+  #  branches:
+  #    - main
+  #pull_request:
+  #  branches:
+  #    - main
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      ssh:
+        description: 'SSH connection to Actions'
+        required: false
+        default: 'false'
+    
+permissions:
+  contents: read
+
+env:
+  PLATFORM: linux64
+  WEBRTC_BRANCH: branch-heads/4664
+  DEPOT_TOOLS_PATH: /usr/local/depot_tools
+  BUILD_PATH: /tmp/webrtc-build
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: docker.io/centos:7
+    steps:
+      - uses: actions/checkout@v2
+      #- name: Setup Debug Session
+      #  uses: P3TERX/ssh2actions@main
+      #if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      #  env:
+      #    TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+       #   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      - name: Install SSH server
+        run: sudo apt-get update && sudo apt-get install -y openssh-server
+      - name: Configure SSH server
+        run: |
+          echo "PermitRootLogin yes" | sudo tee -a /etc/ssh/sshd_config
+          echo "PasswordAuthentication yes" | sudo tee -a /etc/ssh/sshd_config
+          sudo service ssh restart
+          
+      - name: Set SSH user password
+        run: echo "chelin" | sudo passwd "202952" --stdin
+        
+      - name: Get container IP and SSH port
+        run: |
+          echo "Container IP: ${{ steps.job_info.outputs.ip }}"
+          echo "SSH port: ${{ steps.job_info.outputs.port }}"
+
+
+   
+      
