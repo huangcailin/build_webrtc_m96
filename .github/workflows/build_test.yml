@@ -11,7 +11,7 @@ on:
 
 env:
   SSH_PORT: 22
-  SSH_USERNAME: chelin
+  SSH_USERNAME: root
 
 jobs:
   build:
