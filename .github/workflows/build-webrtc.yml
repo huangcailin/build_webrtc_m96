@@ -90,16 +90,16 @@ jobs:
           echo $PATH
           echo ${{ env.DEPOT_TOOLS_PATH }}
           cd ${{ env.DEPOT_TOOLS_PATH }}
-          ls -al
-          pwd
           fetch --nohooks webrtc
-          ls -al
           cd src
           git checkout branch-heads/4664
           #build/linux/sysroot_scripts/install-sysroot.py --arch=amd64
           scl enable devtoolset-10 bash
           echo "start build"
           pwd
+          ls -al
+          gcc -v
+          git branch
           gn gen out/Release --args='target_os="linux" target_cpu="x64" fatal_linker_warnings=false is_debug=false is_component_build=false use_sysroot=false is_clang=false use_lld=false treat_warnings_as_errors=false rtc_include_tests=true rtc_build_examples=false use_custom_libcxx=false use_rtti=true'
           echo "start make"
           ninja -C out/Release   
