@@ -81,13 +81,14 @@ jobs:
         
       - name: Install Depot Tools
         run: |
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ${{ env.DEPOT_TOOLS_PATH }}
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ${{ env.DEPOT_TOOLS_PATH }}/depot_tools
           
           
       - name: Build WebRTC
         run: |
-          export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}+
+          export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}
           echo $PATH
+          echo ${{ env.DEPOT_TOOLS_PATH }}
           cd ${{ env.DEPOT_TOOLS_PATH }}
           ls -al
           pwd
