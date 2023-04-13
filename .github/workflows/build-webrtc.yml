@@ -83,12 +83,15 @@ jobs:
         run: |
           mkdir ${{ env.DEPOT_TOOLS_PATH }}
           cd ${{ env.DEPOT_TOOLS_PATH }}
+          pwd
           git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
           
       - name: Build WebRTC
         run: |
           export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}
           fetch --nohooks webrtc
+          echo $PATH
+          pwd
           ls -al
           cd src
           git checkout branch-heads/4664
