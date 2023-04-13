@@ -98,9 +98,10 @@ jobs:
           git checkout branch-heads/4664
           #build/linux/sysroot_scripts/install-sysroot.py --arch=amd64
           scl enable devtoolset-10 bash
-          export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}
-          cd ${{ env.DEPOT_TOOLS_PATH }}
+          echo "start build"
+          pwd
           gn gen out/Release --args='target_os="linux" target_cpu="x64" fatal_linker_warnings=false is_debug=false is_component_build=false use_sysroot=false is_clang=false use_lld=false treat_warnings_as_errors=false rtc_include_tests=true rtc_build_examples=false use_custom_libcxx=false use_rtti=true'
+          echo "start make"
           ninja -C out/Release   
           exit
 
@@ -108,7 +109,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: webrtc_static_library
-          path: src/out/Static/libwebrtc.a
+          path: src/out/Release/libwebrtc.a
 
       - name: Provide download link for static library
         run: |
