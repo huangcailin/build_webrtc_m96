@@ -90,8 +90,12 @@ jobs:
           cd src
           git checkout branch-heads/4664
           #build/linux/sysroot_scripts/install-sysroot.py --arch=amd64
-          gn gen out/Release --args='target_os="linux" target_cpu="x64" is_debug=false is_component_build=false is_clang=false use_lld=false treat_warnings_as_errors=false use_custom_libcxx=false use_rtti=true rtc_include_tests=true rtc_build_examples=true'
-          ninja -C out/Static     
+          yum install centos-release-scl-rh
+          yum install devtoolset-10-gcc*
+          scl enable devtoolset-10 bash
+          gn gen out/Release --args='target_os="linux" target_cpu="x64" fatal_linker_warnings=false is_debug=false is_component_build=false use_sysroot=false is_clang=false use_lld=false treat_warnings_as_errors=false rtc_include_tests=true rtc_build_examples=false use_custom_libcxx=false use_rtti=true'
+          ninja -C out/Release   
+          exit
 
       - name: Compress and upload static library
         uses: actions/upload-artifact@v2
