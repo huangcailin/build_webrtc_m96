@@ -87,19 +87,19 @@ jobs:
       - name: Build WebRTC
         run: |
           cd ${{ env.DEPOT_TOOLS_PATH }}
-          echo "cd ${{ env.DEPOT_TOOLS_PATH }}" > build_script.sh
-          echo "export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}" > build_script.sh
-          echo "fetch --nohooks webrtc" > build_script.sh
-          echo "cd src" > build_script.sh
-          echo "git checkout branch-heads/4664" > build_script.sh
-          echo "'start build'" > build_script.sh
-          echo "pwd" > build_script.sh
-          echo "ls -al" > build_script.sh
-          echo "gcc -v" > build_script.sh
-          echo "git branch" > build_script.sh
-          echo "gn gen out/Release --args='target_os="linux" target_cpu="x64" fatal_linker_warnings=false is_debug=false is_component_build=false use_sysroot=false is_clang=false use_lld=false treat_warnings_as_errors=false rtc_include_tests=true rtc_build_examples=false use_custom_libcxx=false use_rtti=true'" > build_script.sh
-          echo "'start make'" > build_script.sh
-          echo "ninja -C out/Release   " > build_script.sh
+          echo "cd ${{ env.DEPOT_TOOLS_PATH }}" >> build_script.sh
+          echo "export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}" >> build_script.sh
+          echo "fetch --nohooks webrtc" >> build_script.sh
+          echo "cd src" >> build_script.sh
+          echo "git checkout branch-heads/4664" >> build_script.sh
+          echo "echo 'start build'" >> build_script.sh
+          echo "pwd" >> build_script.sh
+          echo "ls -al" >> build_script.sh
+          echo "gcc -v" >> build_script.sh
+          echo "git branch" >> build_script.sh
+          echo "gn gen out/Release --args='target_os="linux" target_cpu="x64" fatal_linker_warnings=false is_debug=false is_component_build=false use_sysroot=false is_clang=false use_lld=false treat_warnings_as_errors=false rtc_include_tests=true rtc_build_examples=false use_custom_libcxx=false use_rtti=true'" >> build_script.sh
+          echo "echo 'start make'" >> build_script.sh
+          echo "ninja -C out/Release   " >> build_script.sh
           chmod +x build_script.sh
           echo "****************************"
           cat ./build_script.sh
