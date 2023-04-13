@@ -1,6 +1,12 @@
-name: SSH into container
+name: Build WebRTC
 
-on: 
+on:
+  #push:
+  #  branches:
+  #    - main
+  #pull_request:
+  #  branches:
+  #    - main
   repository_dispatch:
   workflow_dispatch:
     inputs:
@@ -8,21 +14,48 @@ on:
         description: 'SSH connection to Actions'
         required: false
         default: 'false'
+    
+permissions:
+  contents: read
 
 env:
-  SSH_PORT: 22
-  SSH_USERNAME: root
+  PLATFORM: linux64
+  WEBRTC_BRANCH: branch-heads/4664
+  DEPOT_TOOLS_PATH: /usr/local/webrtc
+  BUILD_PATH: /tmp/webrtc-build
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container: docker.io/centos:7
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      #- name: Setup Debug Session
+      #  uses: P3TERX/ssh2actions@main
+      #if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+      #  env:
+      #    TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+       #   TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          
+      - name: Install dependencies
+        run: |
+          yum -y update
+          yum install -y ssh make wget git curl gcc-c++ nasm pkgconfig gtk2-devel libnotify-devel \
+          glibc-static libstdc++-static libusb-static libusb-devel libudev-devel alsa-lib-devel \
+          pulseaudio-libs-devel libv4l-devel openssl-devel libXrender-devel libXrandr-devel libvpx-devel \
+          libsrtp-devel libjpeg-devel libpng-devel libX11-devel libXext-devel libXfixes-devel libXcomposite-devel \
+          libXdamage-devel libXtst-devel libXcursor-devel libxkbcommon-devel libwayland-client-devel \
+          libwayland-cursor-devel libwayland-egl-devel mesa-libGL-devel mesa-libEGL-devel fontconfig-devel \
+          freetype-devel libxml2-devel libxslt-devel libsoup-devel libuuid-devel ninja-build python-psutil \
+          python-six python-lxml python-crypto python2 python2-devel python2-setuptools python-devel \
+          python-setuptools python-gobject python-gobject-devel python-libxml2 python-libxslt gstreamer1-devel \
+          gstreamer1-plugins-base-devel gstreamer1-plugins-bad-free-devel gstreamer1-plugins-good-free-devel \
+          gstreamer1-plugins-ugly-free-devel python3 python3-pip 
+          yum install -y centos-release-scl-rh
+          yum install -y devtoolset-10-gcc*
 
-    - name: Setup Debug Session
-      uses: P3TERX/ssh2actions@main
-      env:
-         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+     
+      - name: Build project with GCC 10
+        run: |
+          scl enable devtoolset-10 bash
+          gcc -v
