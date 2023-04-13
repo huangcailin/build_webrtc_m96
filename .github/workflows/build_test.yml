@@ -46,5 +46,9 @@ jobs:
      
       - name: Build project with GCC 10
         run: |
-          scl enable devtoolset-10 \ 
-          "gcc -v"
+          scl enable devtoolset-10 'gcc -v'
+          
+      - name: Build project with GCC 10  2
+        run: |
+          scl enable devtoolset-10 bash
+          gcc -v
