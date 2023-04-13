@@ -21,7 +21,7 @@ permissions:
 env:
   PLATFORM: linux64
   WEBRTC_BRANCH: branch-heads/4664
-  DEPOT_TOOLS_PATH: /usr/local
+  DEPOT_TOOLS_PATH: /usr/local/webrtc
   BUILD_PATH: /tmp/webrtc-build
 
 jobs:
@@ -81,8 +81,9 @@ jobs:
         
       - name: Install Depot Tools
         run: |
+          mkdir ${{ env.DEPOT_TOOLS_PATH }}
           cd ${{ env.DEPOT_TOOLS_PATH }}
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git ${{ env.DEPOT_TOOLS_PATH }}
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
           
       - name: Build WebRTC
         run: |
