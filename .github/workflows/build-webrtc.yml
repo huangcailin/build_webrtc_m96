@@ -50,15 +50,15 @@ jobs:
           python-six python-lxml python-crypto python2 python2-devel python2-setuptools python-devel \
           python-setuptools python-gobject python-gobject-devel python-libxml2 python-libxslt gstreamer1-devel \
           gstreamer1-plugins-base-devel gstreamer1-plugins-bad-free-devel gstreamer1-plugins-good-free-devel \
-          gstreamer1-plugins-ugly-free-devel python3 python3-pip ninja 
+          gstreamer1-plugins-ugly-free-devel python3 python3-pip
           yum install -y centos-release-scl-rh
           yum install -y devtoolset-10-gcc*
           
       - name: Install Ninja
         run: |
-          yum install -y epel-release python-pip
-          pip install ninja
+          pip3 install ninja
           whereis ninja
+          ninja --version          
 
       - name: Update GlibC
         run: | 
