@@ -89,14 +89,13 @@ jobs:
           cd ${{ env.DEPOT_TOOLS_PATH }}
           export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}
           fetch --nohooks webrtc
-          cd src
-          git checkout branch-heads/4664
           
           echo "cd ${{ env.DEPOT_TOOLS_PATH }}" >> build_script.sh
           echo "gcc -v" >> build_script.sh
-          echo "export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}" >> build_script.sh
+          echo "export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:\$PATH" >> build_script.sh
           echo "gcc -v" >> build_script.sh
           echo "cd src" >> build_script.sh
+          echo "git checkout branch-heads/4664" >> build_script.sh
           echo "echo 'start build'" >> build_script.sh
           echo "pwd" >> build_script.sh
           echo "ls -al" >> build_script.sh
