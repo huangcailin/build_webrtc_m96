@@ -49,7 +49,7 @@ jobs:
           echo "gcc -v" > build_script.sh
           echo "cd ${{ env.DEPOT_TOOLS_PATH }}" >> build_script.sh
           echo "export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}" >> build_script.sh
-          echo "gcc -v" > build_script.sh
+          echo "gcc -v" >> build_script.sh
           echo "cd src" >> build_script.sh
           echo "echo 'start build'" >> build_script.sh
           echo "pwd" >> build_script.sh
