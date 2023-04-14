@@ -101,6 +101,7 @@ jobs:
           echo "ls -al" >> build_script.sh
           echo "gcc -v" >> build_script.sh
           echo "git branch" >> build_script.sh
+          echo "gclient sync" >> build_script.sh
           echo "gn gen out/Release --args='target_os=\"linux\" target_cpu=\"x64\" fatal_linker_warnings=false is_debug=false is_component_build=false use_sysroot=false is_clang=false use_lld=false treat_warnings_as_errors=false rtc_include_tests=false rtc_build_examples=false use_custom_libcxx=false use_rtti=true'" >> build_script.sh
           echo "echo 'start make'" >> build_script.sh
           echo "gcc -v" >> build_script.sh
