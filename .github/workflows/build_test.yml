@@ -59,3 +59,4 @@ jobs:
           echo "****************************"
           cat ./build_script.sh
           echo "****************************"
+          scl enable devtoolset-10 "./build_script.sh"
