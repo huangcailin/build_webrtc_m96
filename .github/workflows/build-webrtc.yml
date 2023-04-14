@@ -53,6 +53,12 @@ jobs:
           gstreamer1-plugins-ugly-free-devel python3 python3-pip ninja 
           yum install -y centos-release-scl-rh
           yum install -y devtoolset-10-gcc*
+          
+      - name: Install Ninja
+        run: |
+          yum install -y epel-release python-pip
+          pip install ninja
+          whereis ninja
 
       - name: Update GlibC
         run: | 
