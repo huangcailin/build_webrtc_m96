@@ -46,11 +46,11 @@ jobs:
      
       - name: Build project with GCC 10
         run: |
-          echo "echo $PATH" >> build_script.sh
+          echo "echo \$PATH" >> build_script.sh
           echo "gcc -v" >> build_script.sh
           #echo "cd ${{ env.DEPOT_TOOLS_PATH }}" >> build_script.sh
-          echo "export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:${PATH}" >> build_script.sh
-          echo "echo $PATH" >> build_script.sh
+          echo "export PATH=${{ env.DEPOT_TOOLS_PATH }}/depot_tools:\$PATH" >> build_script.sh
+          echo "echo \$PATH" >> build_script.sh
           echo "gcc -v" >> build_script.sh
           chmod +x build_script.sh
           echo "****************************"
